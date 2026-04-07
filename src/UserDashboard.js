@@ -1,5 +1,5 @@
 // src/UserDashboard.js
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -320,16 +320,16 @@ export default function UserDashboard() {
     document.head.appendChild(s);
   }
 
-  useEffect(() => {
-    if (!token || localStorage.getItem('roleId') !== '2') return navigate('/');
-    fetchProfile();
-  }, []);
-
-  const fetchProfile = () => {
+  const fetchProfile = useCallback(() => {
     axios.get('http://localhost:5000/me', { headers: { Authorization: `Bearer ${token}` } })
       .then(res => setProfile(res.data))
       .catch(() => navigate('/'));
-  };
+  }, [navigate, token]);
+
+  useEffect(() => {
+    if (!token || localStorage.getItem('roleId') !== '2') return navigate('/');
+    fetchProfile();
+  }, [fetchProfile, navigate, token]);
 
   const showToast = (msg, type = 'success') => {
     setToast({ msg, type });

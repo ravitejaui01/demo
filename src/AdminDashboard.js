@@ -344,7 +344,7 @@ export default function AdminDashboard() {
       })
       .catch(() => navigate('/'))
       .finally(() => setLoading(false));
-  }, []);
+  }, [navigate, token]);
 
   const filtered = users.filter(u => {
     const q = search.toLowerCase();
